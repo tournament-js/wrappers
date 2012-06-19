@@ -1,6 +1,9 @@
 var slice = Array.prototype.slice
   , $ = {};
 
+var id = function (x) {
+  return x;
+};
 // ---------------------------------------------
 // Function Wrappers
 // ---------------------------------------------
@@ -8,10 +11,10 @@ var slice = Array.prototype.slice
 // Memoize an expensive function by storing its results in a proper hash.
 $.memoize = function (fn, hasher) {
   var memo = Object.create(null);
-  hasher = hasher || $.id;
+  hasher = hasher || id; // simplistic default hash fn stores first argument as the memo key
   return function () {
     var key = hasher.apply(this, arguments);
-    if (!memo[key]) {
+    if (!(key in memo)) {
       memo[key] = fn.apply(this, arguments);
     }
     return memo[key];
@@ -28,6 +31,62 @@ $.once = function (fn) {
     return result;
   };
 };
+
+$.after = function (times, fn) {
+  return function () {
+    if (--times < 1) {
+      return fn.apply(this, arguments);
+    }
+  };
+};
+
+//$.allow? like once but for n > 1
+
+$.delay = function (delay, fn) {
+  var args = slice.call(arguments, 2);
+  return setTimeout(function () {
+    return fn.apply(null, args);
+  }, delay);
+};
+
+
+$.debounce = function (fn, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this, args = arguments;
+    if (immediate && !timeout) fn.apply(context, args);
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      if (!immediate) fn.apply(context, args);
+    }, wait);
+  };
+};
+
+$.throttle = function (wait, fn) {
+  var context, args, timeout, nextWait, result
+    , last = Date.now() - wait; // first one should start immediately
+
+  return function () {
+    context = this;
+    args = arguments;
+    nextWait = Math.min(wait, Math.max(wait - (Date.now() - last), 0));
+    if (!nextWait) {
+      result = fn.apply(context, args)
+      last = Date.now();
+    } else if (!timeout) {
+      timeout = setTimeout(function () {
+        timeout = null;
+        fn.apply(context, args);
+        last = Date.now();
+      }, nextWait);
+    }
+    return result;
+  };
+};
+
+//$.forever/every as setInterval?
+
 
 // debug function, wrap it in a function reporting its scope and arguments
 // particularly useful when combined with $.iterate
@@ -55,6 +114,9 @@ $.wrap = function (fn, wrapper) {
     return wrapper.apply(this, [fn].concat(slice.call(arguments, 0)));
   };
 };
+
+
+
 
 // unsure about these
 /*
