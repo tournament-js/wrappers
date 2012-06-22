@@ -7,6 +7,18 @@
     "type": "git",
     "url": "git://github.com/clux/wrappers.git"
   },
+  "keywords": [
+    "curry",
+    "timers",
+    "throttle",
+    "debounce",
+    "memoize",
+    "trace",
+    "wrap",
+    "functional",
+    "underscore",
+    "ES5"
+  ],
   "main": "wrappers.js",
   "scripts": {
     "test": "tap ./test"
@@ -18,5 +30,6 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
-  }
+  },
+  "license": "MIT"
 }

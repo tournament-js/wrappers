@@ -32,34 +32,20 @@ $.once = function (fn) {
   };
 };
 
-$.after = function (times, fn) {
+$.allow = function (times, fn) {
   return function () {
-    if (--times < 1) {
+    if (times > 0) {
+      times -= 1;
       return fn.apply(this, arguments);
     }
   };
 };
 
-//$.allow? like once but for n > 1
-
-$.delay = function (delay, fn) {
-  var args = slice.call(arguments, 2);
-  return setTimeout(function () {
-    return fn.apply(null, args);
-  }, delay);
-};
-
-
-$.debounce = function (fn, wait, immediate) {
-  var timeout;
+$.after = function (times, fn) {
   return function () {
-    var context = this, args = arguments;
-    if (immediate && !timeout) fn.apply(context, args);
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-      timeout = null;
-      if (!immediate) fn.apply(context, args);
-    }, wait);
+    if (--times < 1) {
+      return fn.apply(this, arguments);
+    }
   };
 };
 
@@ -85,7 +71,50 @@ $.throttle = function (wait, fn) {
   };
 };
 
-//$.forever/every as setInterval?
+$.repeat = function (times, wait, fn) {
+  return function () {
+    var args = arguments
+      , context = this
+      , count = 0
+      , intId = setInterval(function () {
+      if (++count >= times) {
+        clearInterval(intId);
+      }
+      fn.apply(context, args);
+    }, wait);
+  };
+};
+
+$.delay = function (delay, fn) {
+  return function () {
+    var context = this
+      , args = arguments;
+    setTimeout(function () {
+      return fn.apply(context, args);
+    }, delay);
+  };
+};
+
+$.defer = function (fn) {
+  return $.delay(fn, 0);
+};
+
+$.debounce = function (fn, wait, leading) {
+  var timeout;
+  return function () {
+    var context = this
+      , args = arguments;
+    if (leading && !timeout) {
+      fn.apply(context, args);
+    }
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      if (!leading) fn.apply(context, args);
+    }, wait);
+  };
+};
+
 
 
 // debug function, wrap it in a function reporting its scope and arguments
