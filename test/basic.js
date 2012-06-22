@@ -49,9 +49,7 @@ test("once", function (t) {
 
 test("allow", function (t) {
   var count = 0;
-  var inc = $.allow(2, function () {
-    count += 1;
-  });
+  var inc = $.allow(function () { count++; }, 2);
   inc();
   t.equal(count, 1, "twice inc works on fst call");
   inc();
@@ -64,7 +62,7 @@ test("allow", function (t) {
 
 test("after", function (t) {
   var count = 0;
-  var inc = $.after(3, function () { count ++; });
+  var inc = $.after(function () { count ++; }, 3);
   inc();
   t.equal(count, 0, "inc after 1")
   inc();
@@ -81,7 +79,7 @@ test("throttle", function (t) {
   t.plan(6);
 
   var counter = 0;
-  var inc = $.throttle(100, function () { counter++; });
+  var inc = $.throttle(function () { counter++; }, 100);
   inc(); inc(); inc(); // do one of these, then one at 100ms
 
   setTimeout(inc, 190); // dead period of 90ms => do next one at 200ms
@@ -105,7 +103,7 @@ test("throttle", function (t) {
 test("repeat", function (t) {
   t.plan(3);
   var counter = 0;
-  var fiveInc = $.repeat(5, 20, function () { counter++; });
+  var fiveInc = $.repeat(function () { counter++; }, 5, 20);
 
   var check = function (timePoint, expected) {
     setTimeout(function () {
@@ -127,7 +125,7 @@ test("delay", function (t) {
   t.plan(3);
 
   var counter = 0;
-  var inc = $.delay(100, function () { counter++; });
+  var inc = $.delay(function () { counter++; }, 100);
 
   t.equal(counter, 0, "function untouched by constructions");
   setTimeout(function () {
@@ -140,13 +138,15 @@ test("delay", function (t) {
   }, 220);
 });
 
+
 test("defer", function (t) {
-  t.plan(1);
+  t.plan(2);
   var run = false;
   var defRun = $.defer(function (){ run = true; });
   defRun();
   t.ok(!run, "deferred run has not yet run");
   setTimeout(function () {
     t.ok(run, "deferred has run now");
-  }, 1);
+  }, 0);
 });
+

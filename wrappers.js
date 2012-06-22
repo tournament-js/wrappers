@@ -8,19 +8,7 @@ var id = function (x) {
 // Function Wrappers
 // ---------------------------------------------
 
-// Memoize an expensive function by storing its results in a proper hash.
-$.memoize = function (fn, hasher) {
-  var memo = Object.create(null);
-  hasher = hasher || id; // simplistic default hash fn stores first argument as the memo key
-  return function () {
-    var key = hasher.apply(this, arguments);
-    if (!(key in memo)) {
-      memo[key] = fn.apply(this, arguments);
-    }
-    return memo[key];
-  };
-};
-
+// numeric limitation wrappers
 $.once = function (fn) {
   var done = false, result;
   return function () {
@@ -32,7 +20,7 @@ $.once = function (fn) {
   };
 };
 
-$.allow = function (times, fn) {
+$.allow = function (fn, times) {
   return function () {
     if (times > 0) {
       times -= 1;
@@ -41,7 +29,7 @@ $.allow = function (times, fn) {
   };
 };
 
-$.after = function (times, fn) {
+$.after = function (fn, times) {
   return function () {
     if (--times < 1) {
       return fn.apply(this, arguments);
@@ -49,7 +37,8 @@ $.after = function (times, fn) {
   };
 };
 
-$.throttle = function (wait, fn) {
+// timer based wrappers
+$.throttle = function (fn, wait) {
   var context, args, timeout, nextWait, result
     , last = Date.now() - wait; // first one should start immediately
 
@@ -71,7 +60,7 @@ $.throttle = function (wait, fn) {
   };
 };
 
-$.repeat = function (times, wait, fn) {
+$.repeat = function (fn, times, wait) {
   return function () {
     var args = arguments
       , context = this
@@ -85,7 +74,7 @@ $.repeat = function (times, wait, fn) {
   };
 };
 
-$.delay = function (delay, fn) {
+$.delay = function (fn, delay) {
   return function () {
     var context = this
       , args = arguments;
@@ -116,65 +105,81 @@ $.debounce = function (fn, wait, leading) {
 };
 
 
-
-// debug function, wrap it in a function reporting its scope and arguments
-// particularly useful when combined with $.iterate
+// debug wrappers
 $.trace = function (fn, log) {
   log = log || console.log;
   return function () {
     var result = fn.apply(this, arguments);
+
     log('(' + slice.call(arguments, 0).join(', ') + ') -> ', result);
     return result;
   };
 };
 
-$.traceBy = function (fn, via) {
+$.intercept = function (fn, interceptor) {
   return function () {
-    var result = fn.apply(this, arguments);
-    via(slice.call(arguments, 0), result);
-    return result;
+    interceptor.apply(this, arguments);
+    return fn.apply(this, arguments);
   };
 };
 
-// _.wrap, passes to a callback of form (fn, args..)
-// can log arguments and return, but should return fn.apply(args) to work unobtrusively
+// misc. wrappers
+$.memoize = function (fn, hasher) {
+  var memo = Object.create(null);
+  hasher = hasher || id;
+  return function () {
+    var key = hasher.apply(this, arguments);
+    if (!(key in memo)) {
+      memo[key] = fn.apply(this, arguments);
+    }
+    return memo[key];
+  };
+};
+
 $.wrap = function (fn, wrapper) {
   return function () {
     return wrapper.apply(this, [fn].concat(slice.call(arguments, 0)));
   };
 };
 
+// guarded evaluators
+$.guard = function (f, cond) {
+  return function () {
+    return (cond.apply(this, arguments)) ? f.apply(this, arguments) : null;
+  };
+};
 
+$.either = function (g, fail) {
+  return function () {
+    var result = g.apply(this, arguments);
+    return (result === null) ? fail.apply(this, arguments) : result;
+  };
+};
 
-
-// unsure about these
 /*
+not sure if should expose 4-adic version or variadic
+variadic >4 is probably silly to use anyway - maybe not
+http://jsperf.com/apply-performance-vs-empty-args-on-guards
 
-// guard a function by a condition function
-// returns a function that will only apply f(x) if cond(x) is true
-$.guard = function (fn, cond) {
-  return function (x) {
-    return (cond(x)) ? fn(x) : null;
+#### NB: Light-Variadic
+The `guard` and `either` wrappers can take more arguments, but only up to `4`.
+This is because the most common use case of these functions are short functional tricks
+with a few arguments, and the `f.apply(this, arguments)` penalty is not worth it
+for the few bad practice use cases it opens up.
+
+
+$.guard_ = function (f, cond) {
+  return function (x, y, z, w) {
+    return (cond(x, y, z, w)) ? f(x, y, z, w) : null;
   };
 };
 
-// var guardedFibonacci = $.guard(fibonacci, lt(100));
-
-// $.either null guard a function, else return errorFn result
-// if errorFn is a logger, then curry it with the required message
-$.either = function (guardedFn, errorFn) {
-  return function (x) {
-    var result = guardedFn(x);
-    return (result === null) ? errorFn(x) : result;
+$.either_ = function (guard, fail) {
+  return function (x, y, z, w) {
+    var result = guard(x, y, z, w);
+    return (result === null) ? fail(x, y, z, w) : result;
   };
 };
-
-// var errorMsg;
-// var cpuSafeFibonacci = $.either(guardedFibonacci, $.constant(errorMsg));
-// or
-// var cpuSafeFibonaci = $.either(guardedFibonacci, $.curry(console.log, errorMsg))
 */
-
-//TODO: throttle, debounce
 
 module.exports = $;

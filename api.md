@@ -1,10 +1,10 @@
 # Wrappers API
 Wrappers export function wrappers, i.e. functions to call on your functions; to return
 slightly modified or extended versions of your function. All methods exported herein
-return new functions intended to be used as before, but with added benefits.
+return new functions to be used as before, but with added benefits.
 
-## Timer Based Procedure Wrappers
-### $.delay(wait, f) :: g
+## Timer Based Flow Tweaks
+### $.delay(f, wait) :: g
 Delays the execution of a call by `wait` milliseconds from the execution of the wrapped
 function. Remaining arguments will be forwarded to the `f` when the timer runs out.
 
@@ -36,17 +36,17 @@ function on the leading intead of the trailing edge of the wait interval.
 Useful in circumstances like preventing accidental double-clicks
 on a "submit" button from firing a second time.
 
-### $.throttle(wait, f) :: g
+### $.throttle(f, wait) :: g
 Rate limits a function to be called at most once every `waitMs` milliseconds.
 Unlike many other throttling functions, this obeys the waiting time exactly and ends
 up doing less work for it. TODO: perf verify this obviousness
 
-### $.repeat(times, wait, f) :: g
+### $.repeat(f, times, wait) :: g
 Returns a burst fire version of the function `f`. Upon invocation it calls
 `setInterval` with `wait` delay between each call, counts the times called,
 then clears the timer once the number has been reached.
 
-## Numeric Limitation Wrappers
+## Numeric Invocation Limiters
 ### $.once(f) :: g
 Allows a function to be called at most once. Repeating calls to the wrapped function
 will not call the underlying function, but simply return the old result.
@@ -57,7 +57,7 @@ initCar(); // starts engines
 initCar(); // does nothing
 ````
 
-### $.after(times, f) :: g
+### $.after(f, times) :: g
 Returned function will call only after `times` calls to the wrapped function.
 Useful in flow control when waiting for a set of asynchronous success callbacks to finish.
 Rather than maintaining the counter inside the business logic; call the wrapped function
@@ -72,11 +72,54 @@ targets.forEach(function (target) {
 // the final call to buildDone will call startTests
 ````
 
-### $.allow(times, f) :: g
+### $.allow(f, times) :: g
 Like `after`, but here only the first `times` calls will work. In other words
-`$.allow(n, $.after(n, f))` will work exactly once on the nth call.
+`$.allow($.after(f, n), n)` will work only on the `n`-th call.
 
-## Debug Wrappers
+## Debug
+### $.trace(f [, log]) :: g
+Passes the sliced arguments array, and the result of the wrapped function to the `log`
+function (or console.log if omitted) as argument 1 and 2 respectively, then returns the
+result of the function call. Allows for quick debugging of argument flow without
+having to insert logs at both ends of a function; rather wrap the function at creation:
+
+````javascript
+var procedure = $.trace(function (a, b) {
+  // ...
+  return 5;
+});
+procedure(2, "hi");
+// (2, "hi") -> 5
+````
+
+### $.intercept(f, interceptor) :: g
+Intercept the arguments of `f`. This constructs a function which will call
+the `interceptor` with the same arguments right before calling `f`.
+
+## Guarded Evaluators
+### $.guard(f, cond) :: g
+Returns a function which is guarded by the condition function `cond`. I.e.
+it will return `f(args)` if and only if `cond(args)` is true, otherwise it returns null.
+
+````javascript
+var cpuSafeFib = $.guard(fibonacci, $.lt(500));
+````
+
+Here `lt` is the lambda (y -> (x -> x < y)) from the [operators](https://github.com/clux/operators)
+module.
+
+### $.either(f, fail) :: g
+Returns a function which will call a guarded function `f` and return its
+result if it's not null, otherwise, it will return the result of calling
+`fail` instead.
+
+````javascript
+var fail = function (x) {
+  console.log("calculating fibonacci of " + x + " takes too long (max 500)");
+};
+var publicFib = $.either(cpuSafeFib, fail)
+
+## Misc.
 ### $.wrap(f, wrapper) :: g
 Wraps `f` in a custom wrapper. The created function will call the `wrapper` function
 with (f, argsAry) and can do with these things what it wishes. If it
@@ -94,17 +137,9 @@ wrapProc(); // logs then runs procedure as normal
 Note that if you wanted to simply log everything going in and out of a function
 it'd be easier to use `trace`.
 
-### $.trace(f [, log]) :: g
-Passes the sliced arguments array, and the result of the wrapped function to the `log`
-function (or console.log if omitted) as argument 1 and 2 respectively, then returns the
-result of the function call. Allows for quick debugging of argument flow without
-having to insert logs at both ends of a function; rather wrap the function at creation:
-
-````javascript
-var procedure = $.trace(function (a, b) {
-  // ...
-  return 5;
-});
-procedure(2, "hi");
-// (2, "hi") -> 5
-````
+### $.memoize(f [, hasher]) :: g
+Memoizes a given function by caching the computed result.
+Useful for speeding up slow-running computations.
+If passed the optional hash function, this will be used to compute the hash key for
+storing the result, based on the arguments to the original function.
+The default hasher just uses the first argument to the memoized function as the key.
