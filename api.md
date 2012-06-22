@@ -3,7 +3,7 @@ Wrappers export function wrappers, i.e. functions to call on your functions; to 
 slightly modified or extended versions of your function. All methods exported herein
 return new functions to be used as before, but with added benefits.
 
-## Timer Based Flow Tweaks
+## Timer Based Flow Control
 ### $.delay(f, wait) :: g
 Delays the execution of a call by `wait` milliseconds from the execution of the wrapped
 function. Remaining arguments will be forwarded to the `f` when the timer runs out.
@@ -84,11 +84,10 @@ result of the function call. Allows for quick debugging of argument flow without
 having to insert logs at both ends of a function; rather wrap the function at creation:
 
 ````javascript
-var procedure = $.trace(function (a, b) {
-  // ...
+var f = $.trace(function (a, b) {
   return 5;
 });
-procedure(2, "hi");
+f(2, "hi"); // 5
 // (2, "hi") -> 5
 ````
 
@@ -105,7 +104,7 @@ it will return `f(args)` if and only if `cond(args)` is true, otherwise it retur
 var cpuSafeFib = $.guard(fibonacci, $.lt(500));
 ````
 
-Here `lt` is the lambda (y -> (x -> x < y)) from the [operators](https://github.com/clux/operators)
+Here `lt` is the lambda `(y -> (x -> x < y))` from the [operators](https://github.com/clux/operators)
 module.
 
 ### $.either(f, fail) :: g
@@ -118,6 +117,7 @@ var fail = function (x) {
   console.log("calculating fibonacci of " + x + " takes too long (max 500)");
 };
 var publicFib = $.either(cpuSafeFib, fail)
+````
 
 ## Misc.
 ### $.wrap(f, wrapper) :: g
