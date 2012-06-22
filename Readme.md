@@ -8,14 +8,17 @@ Attach it to the short variable of choice:
 var $ = require('wrappers');
 ````
 
-then wrap your functions:
+then get some cheap extra funcitonality out of your functions with standard wrappers:
 
 ```javascript
-var safeInit = $.once(init);
-safeInit(); // calls init
-safeInit(); // returns old result, does nothing
+var safeInit = $.once(init); // invokes wrapped init function at most once
+var cpuSafeFib = $.guard(fibonacci, $.lt(500)); // guards on condition <500
+var buggyTraced = $.trace(buggyFunction); // logs input and output while calling
+var rateLimitedF = $.throttle(cpuHeavyF, 200); // triggers at most every 200ms
+var burstTrigger = $.repeat($.repeat(fire, 5, 50), 3, 1000); // bursts of 5 every second 3 times
 ````
 
+Read the [API](https://github.com/clux/wrappers/blob/master/api.md).
 Note this module can be gotten directly as is, or gotten via the larger utility library: [interlude](https://github.com/clux/interlude) for which it was made.
 
 ## Installation
