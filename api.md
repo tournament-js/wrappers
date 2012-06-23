@@ -5,8 +5,9 @@ return new functions to be used as before, but with added benefits.
 
 ## Timer Based Flow Control
 ### $.delay(f, wait) :: g
+A curried version of `setTimeout` waiting for the arguments of `f` only.
 Delays the execution of a call by `wait` milliseconds from the execution of the wrapped
-function. Remaining arguments will be forwarded to the `f` when the timer runs out.
+function. Remaining arguments will be forwarded to `f` when the timer runs out.
 
 ````javascript
 var slowLog = $.delay(2000, console.log);
@@ -17,11 +18,11 @@ console.log("hello ...");
 ````
 
 ### $.defer(f) :: g
-Shortcut for `delay` with zero timeout, deferring the function call
+Shortcut for `delay` with zero timeout, which defers the function call
 until the current call stack has cleared.
 
 ### $.debounce(f, wait [, leading]) :: g
-Creates and returns a [debounced](http://en.wikipedia.com/debounce)
+Creates and returns a [debounced](http://en.wiktionary.org/wiki/debounce)
 version of the passed function that will postpone execution until wait
 milliseconds have elapsed since the last invocation.
 Useful for implementing behavior that should only happen after the input
@@ -38,13 +39,19 @@ on a "submit" button from firing a second time.
 
 ### $.throttle(f, wait) :: g
 Rate limits a function to be called at most once every `waitMs` milliseconds.
-Unlike many other throttling functions, this obeys the waiting time exactly and ends
-up doing less work for it. TODO: perf verify this obviousness
+Similar to `_.throttle`, but obeys the waiting time exactly, and ends
+up doing a lot less function calls and setting a lot less timers for it.
 
 ### $.repeat(f, times, wait) :: g
-Returns a burst fire version of the function `f`. Upon invocation it calls
+Returns a repeating version of the function `f`. Upon invocation it calls
 `setInterval` with `wait` delay between each call, counts the times called,
 then clears the timer once the number has been reached.
+
+````javascript
+var count = 0;
+var shootFive = $.repeat(function () { count++; }, 5, 200);
+shootFive(); // in one second, count === 5
+````
 
 ## Numeric Invocation Limiters
 ### $.once(f) :: g
@@ -64,7 +71,7 @@ Rather than maintaining the counter inside the business logic; call the wrapped 
 at each callback.
 
 ````javascript
-var buildDone = $.after(targets.length, startTests)
+var buildDone = $.after(startTests, targets.length);
 targets.forEach(function (target) {
   child_process.execFile('make', [target].concat(flags), {}, buildDone);
 });
@@ -92,8 +99,18 @@ f(2, "hi"); // 5
 ````
 
 ### $.intercept(f, interceptor) :: g
-Intercept the arguments of `f`. This constructs a function which will call
-the `interceptor` with the same arguments right before calling `f`.
+Intercept the arguments of `f`. This constructs a function `g` which will call
+the `interceptor` with the same arguments as `g` right before calling `f`.
+
+````javascript
+var plus2 = function (x, y) {
+  return x + y;
+};
+var plus2i = $.intercept(plus2, console.log);
+plus2i(2, 3);
+// 2 3
+// 5
+````
 
 ## Guarded Evaluators
 ### $.guard(f, cond) :: g
