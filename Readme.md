@@ -13,7 +13,6 @@ then get some cheap extra funcitonality out of your functions with standard wrap
 
 ```javascript
 var safeInit = $.once(init); // invokes wrapped init function at most once
-var cpuSafeFib = $.guard(fibonacci, $.lt(500)); // guards on condition <500
 var tracedFn = $.trace(buggyFn); // logs input and output when called
 var rateLimited = $.throttle(cpuHeavyFn, 200); // triggers at most every 200ms
 var burstTrigger = $.repeat($.repeat(fire, 5, 50), 3, 1000); // bursts of 5 every second 3 times
