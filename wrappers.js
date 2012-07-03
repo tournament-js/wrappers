@@ -31,7 +31,8 @@ $.allow = function (fn, times) {
 
 $.after = function (fn, times) {
   return function () {
-    if (--times < 1) {
+    times -= 1;
+    if (times < 1) {
       return fn.apply(this, arguments);
     }
   };
@@ -47,7 +48,7 @@ $.throttle = function (fn, wait) {
     args = arguments;
     nextWait = Math.min(wait, Math.max(wait - (Date.now() - last), 0));
     if (!nextWait) {
-      result = fn.apply(context, args)
+      result = fn.apply(context, args);
       last = Date.now();
     } else if (!timeout) {
       timeout = setTimeout(function () {
@@ -64,9 +65,11 @@ $.repeat = function (fn, times, wait) {
   return function () {
     var args = arguments
       , context = this
-      , count = 0
-      , intId = setInterval(function () {
-      if (++count >= times) {
+      , count = 0;
+
+    var intId = setInterval(function () {
+      count += 1;
+      if (count >= times) {
         clearInterval(intId);
       }
       fn.apply(context, args);
@@ -99,7 +102,9 @@ $.debounce = function (fn, wait, leading) {
     clearTimeout(timeout);
     timeout = setTimeout(function () {
       timeout = null;
-      if (!leading) fn.apply(context, args);
+      if (!leading) {
+        fn.apply(context, args);
+      }
     }, wait);
   };
 };
