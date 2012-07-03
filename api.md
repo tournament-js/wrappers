@@ -112,30 +112,6 @@ plus2i(2, 3);
 // 5
 ````
 
-## Guarded Evaluators
-### $.guard(f, cond) :: g
-Returns a function which is guarded by the condition function `cond`. I.e.
-it will return `f(args)` if and only if `cond(args)` is true, otherwise it returns null.
-
-````javascript
-var cpuSafeFib = $.guard(fibonacci, $.lt(500));
-````
-
-Here `lt` is the lambda `(y -> (x -> x < y))` from the [operators](https://github.com/clux/operators)
-module.
-
-### $.either(f, fail) :: g
-Returns a function which will call a guarded function `f` and return its
-result if it's not null, otherwise, it will return the result of calling
-`fail` instead.
-
-````javascript
-var fail = function (x) {
-  console.log("calculating fibonacci of " + x + " takes too long (max 500)");
-};
-var publicFib = $.either(cpuSafeFib, fail)
-````
-
 ## Misc.
 ### $.wrap(f, wrapper) :: g
 Wraps `f` in a custom wrapper. The created function will call the `wrapper` function

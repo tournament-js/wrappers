@@ -147,44 +147,4 @@ $.wrap = function (fn, wrapper) {
   };
 };
 
-// guarded evaluators
-$.guard = function (f, cond) {
-  return function () {
-    return (cond.apply(this, arguments)) ? f.apply(this, arguments) : null;
-  };
-};
-
-$.either = function (g, fail) {
-  return function () {
-    var result = g.apply(this, arguments);
-    return (result === null) ? fail.apply(this, arguments) : result;
-  };
-};
-
-/*
-not sure if should expose 4-adic version or variadic
-variadic >4 is probably silly to use anyway - maybe not
-http://jsperf.com/apply-performance-vs-empty-args-on-guards
-
-#### NB: Light-Variadic
-The `guard` and `either` wrappers can take more arguments, but only up to `4`.
-This is because the most common use case of these functions are short functional tricks
-with a few arguments, and the `f.apply(this, arguments)` penalty is not worth it
-for the few bad practice use cases it opens up.
-
-
-$.guard_ = function (f, cond) {
-  return function (x, y, z, w) {
-    return (cond(x, y, z, w)) ? f(x, y, z, w) : null;
-  };
-};
-
-$.either_ = function (guard, fail) {
-  return function (x, y, z, w) {
-    var result = guard(x, y, z, w);
-    return (result === null) ? fail(x, y, z, w) : result;
-  };
-};
-*/
-
 module.exports = $;
