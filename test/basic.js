@@ -150,3 +150,19 @@ test("defer", function (t) {
   }, 0);
 });
 
+test("repeat", function (t) {
+  t.plan(3);
+  var count = 0
+  var burst = $.repeat(function() { count++ }, 5, 200);
+  t.equal(count, 0, "nothing fired yet by repeat");
+  burst();
+  setTimeout(function () {
+    t.equal(count, 5, "have shot 5 times");
+    burst();
+  }, 1200);
+
+  setTimeout(function () {
+    t.equal(count, 10, "have shot 5 times again");
+  }, 2400);
+});
+

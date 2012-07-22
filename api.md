@@ -103,20 +103,19 @@ Intercept the arguments of `f`. This constructs a function `g` which will call
 the `interceptor` with the same arguments as `g` right before calling `f`.
 
 ````javascript
-var plus2 = function (x, y) {
-  return x + y;
+var write = function () {
+  fs.appendFile(logFile, slice.call(arguments, 0));
 };
-var plus2i = $.intercept(plus2, console.log);
-plus2i(2, 3);
-// 2 3
+var plus2i = $.intercept($.plus2, write);
+plus2i(2, 3); // appends: `[ 2, 3 ]` to logFile asynchronously
 // 5
 ````
 
+Note that the `plus2` function is available with [interlude](https://github.com/clux/interlude) only.
+
 ## Misc.
 ### $.wrap(f, wrapper) :: g
-Wraps `f` in a custom wrapper. The created function will call the `wrapper` function
-with (f, argsAry) and can do with these things what it wishes. If it
-returns f.apply(this, args) then the wrapper will be unobtrusive.
+Wraps `f` in a custom wrapper. The created function will call the `wrapper` function with (f, argsAry) and can do with these things what it wishes. If `f` returns f.apply(this, args) then the wrapper will be unobtrusive.
 
 ````javascript
 var wrapper = function (f, args) {

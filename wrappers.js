@@ -109,7 +109,6 @@ $.debounce = function (fn, wait, leading) {
   };
 };
 
-
 // debug wrappers
 $.trace = function (fn, log) {
   log = log || console.log;
