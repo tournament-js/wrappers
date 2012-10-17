@@ -87,6 +87,7 @@ $.delay = function (fn, delay) {
   };
 };
 
+// NB: process.nextTick more efficient in node
 $.defer = function (fn) {
   return $.delay(fn, 0);
 };
