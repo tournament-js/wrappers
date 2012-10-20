@@ -16,8 +16,7 @@
     "trace",
     "wrap",
     "functional",
-    "underscore",
-    "ES5"
+    "underscore"
   ],
   "main": "wrappers.js",
   "scripts": {
