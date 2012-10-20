@@ -1,5 +1,5 @@
 var slice = Array.prototype.slice
-  , $ = {};
+  , w = {};
 
 var id = function (x) {
   return x;
@@ -9,7 +9,7 @@ var id = function (x) {
 // ---------------------------------------------
 
 // numeric limitation wrappers
-$.once = function (fn) {
+w.once = function (fn) {
   var done = false, result;
   return function () {
     if (!done) {
@@ -20,7 +20,7 @@ $.once = function (fn) {
   };
 };
 
-$.allow = function (fn, times) {
+w.allow = function (fn, times) {
   return function () {
     if (times > 0) {
       times -= 1;
@@ -29,7 +29,7 @@ $.allow = function (fn, times) {
   };
 };
 
-$.after = function (fn, times) {
+w.after = function (fn, times) {
   return function () {
     times -= 1;
     if (times < 1) {
@@ -39,7 +39,7 @@ $.after = function (fn, times) {
 };
 
 // timer based wrappers
-$.throttle = function (fn, wait) {
+w.throttle = function (fn, wait) {
   var context, args, timeout, nextWait, result
     , last = Date.now() - wait; // first one should start immediately
 
@@ -61,7 +61,7 @@ $.throttle = function (fn, wait) {
   };
 };
 
-$.repeat = function (fn, times, wait) {
+w.repeat = function (fn, times, wait) {
   return function () {
     var args = arguments
       , context = this
@@ -77,7 +77,7 @@ $.repeat = function (fn, times, wait) {
   };
 };
 
-$.delay = function (fn, delay) {
+w.delay = function (fn, delay) {
   return function () {
     var context = this
       , args = arguments;
@@ -88,11 +88,11 @@ $.delay = function (fn, delay) {
 };
 
 // NB: process.nextTick more efficient in node
-$.defer = function (fn) {
-  return $.delay(fn, 0);
+w.defer = function (fn) {
+  return w.delay(fn, 0);
 };
 
-$.debounce = function (fn, wait, leading) {
+w.debounce = function (fn, wait, leading) {
   var timeout;
   return function () {
     var context = this
@@ -111,17 +111,17 @@ $.debounce = function (fn, wait, leading) {
 };
 
 // debug wrappers
-$.trace = function (fn, log) {
+w.trace = function (fn, log) {
   log = log || console.log;
   return function () {
     var result = fn.apply(this, arguments);
 
-    log('(' + slice.call(arguments, 0).join(', ') + ') -> ', result);
+    log('(' + slice.call(arguments).join(', ') + ') -> ', result);
     return result;
   };
 };
 
-$.intercept = function (fn, interceptor) {
+w.intercept = function (fn, interceptor) {
   return function () {
     interceptor.apply(this, arguments);
     return fn.apply(this, arguments);
@@ -129,11 +129,11 @@ $.intercept = function (fn, interceptor) {
 };
 
 // misc. wrappers
-$.memoize = function (fn, hasher) {
+w.memoize = function (fn, hashFn) {
   var memo = Object.create(null);
-  hasher = hasher || id;
+  hashFn = hashFn || id;
   return function () {
-    var key = hasher.apply(this, arguments);
+    var key = hashFn.apply(this, arguments);
     if (!(key in memo)) {
       memo[key] = fn.apply(this, arguments);
     }
@@ -141,10 +141,10 @@ $.memoize = function (fn, hasher) {
   };
 };
 
-$.wrap = function (fn, wrapper) {
+w.wrap = function (fn, wrapper) {
   return function () {
-    return wrapper.apply(this, [fn].concat(slice.call(arguments, 0)));
+    return wrapper.apply(this, [fn].concat(slice.call(arguments)));
   };
 };
 
-module.exports = $;
+module.exports = w;

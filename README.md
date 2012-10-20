@@ -6,21 +6,21 @@ Wrappers is a small library exporting basic wrapper functions for functions.
 Attach it to the short variable of choice:
 
 ````javascript
-var $ = require('wrappers');
+var w = require('wrappers');
 ````
 
 then get some cheap extra funcitonality out of your functions with standard wrappers:
 
 ```javascript
-var safeInit = $.once(init); // invokes wrapped init function at most once
-var tracedFn = $.trace(buggyFn); // logs input and output when called
-var rateLimited = $.throttle(cpuHeavyFn, 200); // triggers at most every 200ms
-var burstTrigger = $.repeat($.repeat(fire, 5, 50), 3, 1000); // bursts of 5 every second 3 times
+var safeInit = w.once(init); // invokes wrapped init function at most once
+var tracedFn = w.trace(buggyFn); // logs input and output when called
+var rateLimited = w.throttle(cpuHeavyFn, 200); // triggers at most every 200ms
+var burstTrigger = w.repeat(w.repeat(fire, 5, 50), 3, 1000); // bursts of 5 every second 3 times
 ````
 
 Read the [API](https://github.com/clux/wrappers/blob/master/api.md).
 
-Note this module can be gotten directly as is, or gotten via the larger utility library: [interlude](https://github.com/clux/interlude) for which it was made.
+This module used to be included in functional utility library [interlude](https://github.com/clux/interlude), but is now an extra.
 
 ## Installation
 

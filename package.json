@@ -2,7 +2,7 @@
   "author": "Eirik Albrigtsen <analsandblaster@gmail.com>",
   "name": "wrappers",
   "description": "Function wrappers",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/clux/wrappers.git"
@@ -23,13 +23,8 @@
   "scripts": {
     "test": "tap ./test"
   },
-  "dependencies": {},
   "devDependencies": {
-    "tap": "~0.2.5"
-  },
-  "optionalDependencies": {},
-  "engines": {
-    "node": "*"
+    "tap": "~0.3.1"
   },
   "license": "MIT"
 }

@@ -166,3 +166,34 @@ test("repeat", function (t) {
   }, 2400);
 });
 
+test("wrap", function (t) {
+  t.plan(4);
+  var wrapper = function (inner, arg1, arg2) {
+    t.equal(arg1, 5, "arg1 got passed through");
+    t.equal(arg2, "woo", "arg2 got passed through");
+    inner(arg1, arg2); // has to pass on data
+  };
+
+  var fn = $.wrap(function (a, b) {
+    t.equal(a, 5, "arg1 got passed through twice");
+    t.equal(b, "woo", "arg2 got passed through twice");
+  }, wrapper);
+
+  fn(5, "woo");
+});
+
+test("intercept", function (t) {
+  t.plan(4);
+  var interceptor = function (arg1, arg2) {
+    t.equal(arg1, 5, "arg1 got passed through");
+    t.equal(arg2, "woo", "arg2 got passed through");
+    // does not have to pass on data
+  };
+
+  var fn = $.intercept(function (a, b) {
+    t.equal(a, 5, "arg1 got passed through twice");
+    t.equal(b, "woo", "arg2 got passed through twice");
+  }, interceptor);
+
+  fn(5, "woo");
+});
