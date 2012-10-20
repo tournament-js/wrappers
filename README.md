@@ -5,9 +5,9 @@ Wrappers is a small library exporting basic wrapper functions for functions.
 ## Usage
 Attach it to the short variable of choice:
 
-````javascript
+```javascript
 var w = require('wrappers');
-````
+```
 
 then get some cheap extra funcitonality out of your functions with standard wrappers:
 
@@ -16,7 +16,7 @@ var safeInit = w.once(init); // invokes wrapped init function at most once
 var tracedFn = w.trace(buggyFn); // logs input and output when called
 var rateLimited = w.throttle(cpuHeavyFn, 200); // triggers at most every 200ms
 var burstTrigger = w.repeat(w.repeat(fire, 5, 50), 3, 1000); // bursts of 5 every second 3 times
-````
+```
 
 Read the [API](https://github.com/clux/wrappers/blob/master/api.md).
 
@@ -24,22 +24,22 @@ This module used to be included in functional utility library [interlude](https:
 
 ## Installation
 
-````bash
+```bash
 $ npm install wrappers
-````
+```
 
 ## Running tests
 Install development dependencies
 
-````bash
+```bash
 $ npm install
-````
+```
 
 Run the tests
 
-````bash
+```bash
 $ npm test
-````
+```
 
 ## License
 MIT-Licensed. See LICENSE file for details.
