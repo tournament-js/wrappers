@@ -1,4 +1,4 @@
-# Wrappers [![Build Status](https://secure.travis-ci.org/clux/wrappers.png)](http://travis-ci.org/clux/wrappers)
+# Wrappers [![Build Status](https://secure.travis-ci.org/clux/wrappers.png)](http://travis-ci.org/clux/wrappers) [![Dependency Status](https://david-dm.org/clux/wrappers.png)](https://david-dm.org/clux/wrappers)
 
 Wrappers is a small library exporting basic wrapper functions for functions.
 
