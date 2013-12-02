@@ -1,4 +1,7 @@
-# Wrappers [![Build Status](https://secure.travis-ci.org/clux/wrappers.png)](http://travis-ci.org/clux/wrappers) [![Dependency Status](https://david-dm.org/clux/wrappers.png)](https://david-dm.org/clux/wrappers)
+# Wrappers
+[![Build Status](https://secure.travis-ci.org/clux/wrappers.png)](http://travis-ci.org/clux/wrappers)
+[![Dependency Status](https://david-dm.org/clux/wrappers.png)](https://david-dm.org/clux/wrappers)
+[![unstable](http://hughsk.github.io/stability-badges/dist/unstable.svg)](http://nodejs.org/api/documentation.html#documentation_stability_index)
 
 Wrappers is a small library exporting basic wrapper functions for functions.
 
