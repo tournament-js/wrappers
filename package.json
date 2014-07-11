@@ -3,6 +3,7 @@
   "name": "wrappers",
   "description": "Function wrappers",
   "version": "0.2.1",
+  "stability": "unstable",
   "repository": {
     "type": "git",
     "url": "clux/wrappers"
@@ -18,12 +19,16 @@
     "functional",
     "underscore"
   ],
-  "main": "wrappers.js",
+  "main": "index.js",
   "scripts": {
-    "test": "tap ./test"
+    "test": "$(npm bin)/nodeunit --reporter=verbose test/*.js",
+    "coveralls": "$(npm bin)/jscoverage lib && WRAPPERS_COV=1 $(npm bin)/nodeunit --reporter=lcov test | $(npm bin)/coveralls"
   },
+  "dependencies": {},
   "devDependencies": {
-    "tap": "~0.4.4"
+    "nodeunit": "~0.9.0",
+    "jscoverage": "~0.5.4",
+    "coveralls": "~2.11.1"
   },
   "license": "MIT"
 }

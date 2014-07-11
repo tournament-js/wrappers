@@ -1,7 +1,9 @@
 # Wrappers
-[![Build Status](https://secure.travis-ci.org/clux/wrappers.png)](http://travis-ci.org/clux/wrappers)
-[![Dependency Status](https://david-dm.org/clux/wrappers.png)](https://david-dm.org/clux/wrappers)
-[![unstable](http://hughsk.github.io/stability-badges/dist/unstable.svg)](http://nodejs.org/api/documentation.html#documentation_stability_index)
+[![npm status](http://img.shields.io/npm/v/wrappers.svg)](https://www.npmjs.org/package/wrappers)
+[![build status](https://secure.travis-ci.org/clux/wrappers.svg)](http://travis-ci.org/clux/wrappers)
+[![dependency status](https://david-dm.org/clux/wrappers.svg)](https://david-dm.org/clux/wrappers)
+[![coverage status](http://img.shields.io/coveralls/clux/wrappers.svg)](https://coveralls.io/r/clux/wrappers)
+[![unstable](http://img.shields.io/badge/stability-unstable-E5AE13.svg)](http://nodejs.org/api/documentation.html#documentation_stability_index)
 
 Wrappers is a small library exporting basic wrapper functions for functions.
 

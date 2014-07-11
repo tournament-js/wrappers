@@ -1,8 +1,6 @@
-var tap = require('tap')
-  , test = tap.test
-  , $ = require('../');
+var $ = require('../');
 
-test("memoize", function (t) {
+exports.memoize = function (t) {
   // not a great example, as fib could be super memoized manually
   // but it's still faster for same call..
   var fib = function (n) {
@@ -30,11 +28,11 @@ test("memoize", function (t) {
   t.equal(memoReturn(2, 4), 6, "memoReturn returns memoized second time");
   t.equal(onceReturn(2, 4), null, "just to prove memoReturn called orig");
 
-  t.end();
-});
+  t.done();
+};
 
 
-test("once", function (t) {
+exports.once = function (t) {
   var res = 0;
   var inc = $.once(function () {
     res += 1;
@@ -44,10 +42,10 @@ test("once", function (t) {
   t.equal(res, 1, "once inc works on first call, modified");
   t.equal(inc(), 1, "once inc returned old result on second call");
   t.equal(res, 1, "once inc second call ignored");
-  t.end();
-});
+  t.done();
+};
 
-test("allow", function (t) {
+exports.allow = function (t) {
   var count = 0;
   var inc = $.allow(function () { count++; }, 2);
   inc();
@@ -56,11 +54,11 @@ test("allow", function (t) {
   t.equal(count, 2, "twice inc works on snd call");
   inc();
   t.equal(count, 2, "twice inc failed on trd call");
-  t.end();
-});
+  t.done();
+};
 
 
-test("after", function (t) {
+exports.after = function (t) {
   var count = 0;
   var inc = $.after(function () { count ++; }, 3);
   inc();
@@ -71,12 +69,11 @@ test("after", function (t) {
   t.equal(count, 1, "inc after 3")
   inc();
   t.equal(count, 2, "inc after 4");
-  t.end();
-});
+  t.done();
+};
 
-
-test("throttle", function (t) {
-  t.plan(6);
+exports.throttle = function (t) {
+  t.expect(6);
 
   var counter = 0;
   var inc = $.throttle(function () { counter++; }, 100);
@@ -89,6 +86,9 @@ test("throttle", function (t) {
   var check = function (timePoint, expected) {
     setTimeout(function () {
       t.equal(counter, expected, "inc " + timePoint + "ms");
+      if (expected === 5) {
+        t.done(); // last check call
+      }
     }, timePoint);
   };
 
@@ -98,31 +98,10 @@ test("throttle", function (t) {
   check(310, 4); // call at 210ms should kick in at ~300
   check(410, 4); // nothing between 300->400 nothing should have happened
   check(430, 5); // call at 420 should happen immediately
-});
+};
 
-test("repeat", function (t) {
-  t.plan(3);
-  var counter = 0;
-  var fiveInc = $.repeat(function () { counter++; }, 5, 20);
-
-  var check = function (timePoint, expected) {
-    setTimeout(function () {
-      t.equal(counter, expected, "inc " + timePoint + "ms");
-    }, timePoint);
-  };
-
-  check(10, 0); // nothing has been called yet
-  setTimeout(fiveInc, 50);
-  check(180, 5);
-  setTimeout(fiveInc, 200);
-  setTimeout(fiveInc, 200);
-  setTimeout(fiveInc, 201);
-  check(320, 20);
-});
-
-
-test("delay", function (t) {
-  t.plan(3);
+exports.delay = function (t) {
+  t.expect(3);
 
   var counter = 0;
   var inc = $.delay(function () { counter++; }, 100);
@@ -135,23 +114,25 @@ test("delay", function (t) {
 
   setTimeout(function () {
     t.equal(counter, 1, "but 100ms after call it works");
+    t.done();
   }, 220);
-});
+};
 
 
-test("defer", function (t) {
-  t.plan(2);
+exports.defer = function (t) {
+  t.expect(2);
   var run = false;
   var defRun = $.defer(function (){ run = true; });
   defRun();
   t.ok(!run, "deferred run has not yet run");
   setTimeout(function () {
     t.ok(run, "deferred has run now");
+    t.done();
   }, 0);
-});
+};
 
-test("repeat", function (t) {
-  t.plan(3);
+exports.repeat = function (t) {
+  t.expect(3);
   var count = 0
   var burst = $.repeat(function() { count++ }, 5, 200);
   t.equal(count, 0, "nothing fired yet by repeat");
@@ -163,11 +144,12 @@ test("repeat", function (t) {
 
   setTimeout(function () {
     t.equal(count, 10, "have shot 5 times again");
+    t.done();
   }, 2400);
-});
+};
 
-test("wrap", function (t) {
-  t.plan(4);
+exports.wrap = function (t) {
+  t.expect(4);
   var wrapper = function (inner, arg1, arg2) {
     t.equal(arg1, 5, "arg1 got passed through");
     t.equal(arg2, "woo", "arg2 got passed through");
@@ -177,13 +159,14 @@ test("wrap", function (t) {
   var fn = $.wrap(function (a, b) {
     t.equal(a, 5, "arg1 got passed through twice");
     t.equal(b, "woo", "arg2 got passed through twice");
+    t.done();
   }, wrapper);
 
   fn(5, "woo");
-});
+};
 
-test("intercept", function (t) {
-  t.plan(4);
+exports.intercept = function (t) {
+  t.expect(4);
   var interceptor = function (arg1, arg2) {
     t.equal(arg1, 5, "arg1 got passed through");
     t.equal(arg2, "woo", "arg2 got passed through");
@@ -193,7 +176,8 @@ test("intercept", function (t) {
   var fn = $.intercept(function (a, b) {
     t.equal(a, 5, "arg1 got passed through twice");
     t.equal(b, "woo", "arg2 got passed through twice");
+    t.done();
   }, interceptor);
 
   fn(5, "woo");
-});
+};
