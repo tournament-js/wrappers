@@ -165,6 +165,23 @@ exports.wrap = function (t) {
   fn(5, "woo");
 };
 
+exports.trace = function (t) {
+  var log = function (a) {
+    t.equal(a, '(1, woo) -> hi', 'output');
+    t.done();
+  };
+  var ctx = { o: 'yes' };
+  var fn = function (a, b) {
+    t.equal(a, 1, 'a passed through');
+    t.equal(b, "woo", 'b passed through');
+    t.equal(this.o, 'yes');
+    return 'hi';
+  }.bind(ctx);
+
+  var tracer = $.trace(fn, log);
+  tracer(1, "woo");
+}
+
 exports.intercept = function (t) {
   t.expect(4);
   var interceptor = function (arg1, arg2) {
