@@ -165,6 +165,28 @@ exports.wrap = function (t) {
   fn(5, "woo");
 };
 
+exports.debounce = function (t) {
+  var intervals = [10, 50, 100, 200, 300, 350, 530];
+  t.expect(intervals.length + 1);
+  var i = 0;
+  var incr = $.debounce(function () { i++; }, 200);
+  intervals.forEach(function (interval) {
+    setTimeout(function () {
+      incr();
+      t.equal(i, 0, "i not incremented after " + interval + "ms");
+      // keeps not being incremented because we keep calling it
+      // with less than 20ms in between
+    }, interval);
+  });
+  var wait = intervals.reduce(function (acc, e) {
+    return acc + e;
+  }, 0) + 200 + 10; // 200 after input stopped arriving (+ buffer)
+  setTimeout(function () {
+    t.equal(i, 1, "but incremented after (" + wait + "ms)");
+    t.done();
+  }, wait);
+};
+
 exports.trace = function (t) {
   var log = function (a) {
     t.equal(a, '(1, woo) -> hi', 'output');
