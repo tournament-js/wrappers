@@ -170,17 +170,17 @@ exports.trace = function (t) {
     t.equal(a, '(1, woo) -> hi', 'output');
     t.done();
   };
-  var ctx = { o: 'yes' };
-  var fn = function (a, b) {
-    t.equal(a, 1, 'a passed through');
-    t.equal(b, "woo", 'b passed through');
-    t.equal(this.o, 'yes');
-    return 'hi';
-  }.bind(ctx);
-
-  var tracer = $.trace(fn, log);
-  tracer(1, "woo");
-}
+  var ctx = {
+    o: 'yes',
+    fn: $.trace(function (a, b) {
+      t.equal(a, 1, 'a passed through');
+      t.equal(b, "woo", 'b passed through');
+      t.equal(this.o, 'yes', 'context correct');
+      return 'hi';
+    }, log)
+  };
+  ctx.fn(1, "woo");
+};
 
 exports.intercept = function (t) {
   t.expect(4);
