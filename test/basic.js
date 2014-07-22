@@ -62,11 +62,11 @@ exports.after = function (t) {
   var count = 0;
   var inc = $.after(function () { count ++; }, 3);
   inc();
-  t.equal(count, 0, "inc after 1")
+  t.equal(count, 0, "inc after 1");
   inc();
-  t.equal(count, 0, "inc after 2")
+  t.equal(count, 0, "inc after 2");
   inc();
-  t.equal(count, 1, "inc after 3")
+  t.equal(count, 1, "inc after 3");
   inc();
   t.equal(count, 2, "inc after 4");
   t.done();
@@ -133,8 +133,8 @@ exports.defer = function (t) {
 
 exports.repeat = function (t) {
   t.expect(3);
-  var count = 0
-  var burst = $.repeat(function() { count++ }, 5, 200);
+  var count = 0;
+  var burst = $.repeat(function() { count++; }, 5, 200);
   t.equal(count, 0, "nothing fired yet by repeat");
   burst();
   setTimeout(function () {
