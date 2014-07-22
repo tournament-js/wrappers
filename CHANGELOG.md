@@ -1,4 +1,4 @@
-0.2.2 / 2014-07-11
+0.2.2 / 2014-07-22
 ==================
   * Maintenance release - documentation and test coverage information
 
