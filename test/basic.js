@@ -1,4 +1,4 @@
-var $ = require('../');
+var $ = require(process.env.WRAPPERS_COV ? '../wrappers-cov.js' : '../');
 
 exports.memoize = function (t) {
   // not a great example, as fib could be super memoized manually

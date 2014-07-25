@@ -19,10 +19,11 @@
     "functional",
     "underscore"
   ],
-  "main": "index.js",
+  "main": "wrappers.js",
   "scripts": {
-    "test": "$(npm bin)/nodeunit --reporter=verbose test/*.js",
-    "coveralls": "$(npm bin)/jscoverage lib && WRAPPERS_COV=1 $(npm bin)/nodeunit --reporter=lcov test | $(npm bin)/coveralls"
+    "test": "nodeunit --reporter=verbose test/*.js",
+    "coverage": "jscoverage wrappers.js && WRAPPERS_COV=1 nodeunit --reporter=lcov test",
+    "coveralls": "npm run coverage | coveralls"
   },
   "dependencies": {},
   "devDependencies": {
