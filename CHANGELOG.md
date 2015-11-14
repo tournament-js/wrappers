@@ -1,3 +1,7 @@
+0.2.3 / 2015-11-15
+==================
+  * Added `.npmignore`
+
 0.2.2 / 2014-07-22
 ==================
   * Maintenance release - documentation and test coverage information

@@ -3,7 +3,6 @@
 [![build status](https://secure.travis-ci.org/clux/wrappers.svg)](http://travis-ci.org/clux/wrappers)
 [![dependency status](https://david-dm.org/clux/wrappers.svg)](https://david-dm.org/clux/wrappers)
 [![coverage status](http://img.shields.io/coveralls/clux/wrappers.svg)](https://coveralls.io/r/clux/wrappers)
-[![unstable](http://img.shields.io/badge/stability-unstable-E5AE13.svg)](http://nodejs.org/api/documentation.html#documentation_stability_index)
 
 Wrappers is a small library exporting basic wrapper functions for functions.
 
@@ -31,19 +30,6 @@ This module used to be included in functional utility library [interlude](https:
 
 ```bash
 $ npm install wrappers
-```
-
-## Running tests
-Install development dependencies
-
-```bash
-$ npm install
-```
-
-Run the tests
-
-```bash
-$ npm test
 ```
 
 ## License
